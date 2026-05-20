@@ -12,7 +12,6 @@ export default function Home() {
   const [ph, setPh] = useState("");
   const [fosforo, setFosforo] = useState("");
   const [potassio, setPotassio] = useState("");
-
   const [calcio, setCalcio] = useState("");
   const [magnesio, setMagnesio] = useState("");
   const [ctc, setCtc] = useState("");
@@ -21,7 +20,7 @@ export default function Home() {
   const [vBase, setVBase] = useState("");
 
   async function analisarSolo() {
-    const recomendacoes = [];
+    let recomendacoes = [];
 
     // =========================
     // CÁLCULO V%
@@ -41,7 +40,15 @@ export default function Home() {
     // =========================
 
     if (Number(ph) < 5.5) {
-      recomendacoes.push("Aplicar calcário.");
+      recomendacoes.push(
+        "Aplicar calcário para correção da acidez."
+      );
+    }
+
+    if (Number(ph) >= 5.5) {
+      recomendacoes.push(
+        "pH adequado para desenvolvimento da pastagem."
+      );
     }
 
     // =========================
@@ -49,7 +56,15 @@ export default function Home() {
     // =========================
 
     if (Number(fosforo) < 15) {
-      recomendacoes.push("Corrigir fósforo.");
+      recomendacoes.push(
+        "Fósforo baixo. Realizar adubação fosfatada."
+      );
+    }
+
+    if (Number(fosforo) >= 15) {
+      recomendacoes.push(
+        "Fósforo em nível adequado."
+      );
     }
 
     // =========================
@@ -57,7 +72,15 @@ export default function Home() {
     // =========================
 
     if (Number(potassio) < 40) {
-      recomendacoes.push("Potássio baixo.");
+      recomendacoes.push(
+        "Potássio baixo. Necessária correção potássica."
+      );
+    }
+
+    if (Number(potassio) >= 40) {
+      recomendacoes.push(
+        "Potássio adequado."
+      );
     }
 
     // =========================
@@ -78,7 +101,7 @@ export default function Home() {
 
     if (v >= 70) {
       recomendacoes.push(
-        "Solo com boa fertilidade química."
+        "Solo com excelente fertilidade química."
       );
     }
 
@@ -87,26 +110,38 @@ export default function Home() {
     setResultado(textoFinal);
 
     // =========================
-    // SALVAR NO SUPABASE
+    // PEGAR USUÁRIO
     // =========================
 
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    await supabase.from("analises_solo").insert([
-      {
-        usuario_id: user.id,
-        ph: Number(ph),
-        fosforo: Number(fosforo),
-        potassio: Number(potassio),
-        calcio: Number(calcio),
-        magnesio: Number(magnesio),
-        ctc: Number(ctc),
-        v_percentual: Number(v.toFixed(1)),
-        recomendacao: textoFinal,
-      },
-    ]);
+    // =========================
+    // SALVAR NO BANCO
+    // =========================
+
+    const { error } = await supabase
+      .from("analises_solo")
+      .insert([
+        {
+          usuario_id: user.id,
+          ph: Number(ph),
+          fosforo: Number(fosforo),
+          potassio: Number(potassio),
+          calcio: Number(calcio),
+          magnesio: Number(magnesio),
+          ctc: Number(ctc),
+          v_percentual: Number(v.toFixed(1)),
+          recomendacao: textoFinal,
+        },
+      ]);
+
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("Análise salva com sucesso 🚜");
+    }
   }
 
   return (
@@ -119,25 +154,45 @@ export default function Home() {
         fontFamily: "Arial",
       }}
     >
+      {/* TOPO */}
       <div
         style={{
-          background: "#00c853",
-          padding: "30px",
-          borderRadius: "20px",
+          background:
+            "linear-gradient(90deg, #00c853, #009624)",
+          padding: "40px",
+          borderRadius: "25px",
           marginBottom: "30px",
+          boxShadow: "0px 0px 20px rgba(0,0,0,0.4)",
         }}
       >
-        <h1 style={{ fontSize: "60px" }}>
+        <h1
+          style={{
+            fontSize: "70px",
+            marginBottom: "10px",
+          }}
+        >
           AgroSolo Tech
         </h1>
 
-        <p style={{ fontSize: "28px" }}>
+        <p
+          style={{
+            fontSize: "30px",
+          }}
+        >
           Inteligência em Interpretação de Solo
         </p>
 
-        <p>Baseado no Boletim 100 de São Paulo</p>
+        <p
+          style={{
+            marginTop: "10px",
+            opacity: 0.9,
+          }}
+        >
+          Baseado no Boletim 100 de São Paulo
+        </p>
       </div>
 
+      {/* GRID */}
       <div
         style={{
           display: "grid",
@@ -222,7 +277,9 @@ export default function Home() {
               type="number"
               placeholder="CTC"
               value={ctc}
-              onChange={(e) => setCtc(e.target.value)}
+              onChange={(e) =>
+                setCtc(e.target.value)
+              }
               style={inputStyle}
             />
 
@@ -237,9 +294,10 @@ export default function Home() {
                 fontSize: "20px",
                 cursor: "pointer",
                 marginTop: "10px",
+                fontWeight: "bold",
               }}
             >
-              🌱 Gerar Recomendação
+              🚜 Gerar Recomendação
             </button>
           </div>
         </div>
@@ -262,67 +320,36 @@ export default function Home() {
             Resultado da Análise
           </h2>
 
-          <div
-            style={{
-              background: "#06152b",
-              padding: "20px",
-              borderRadius: "15px",
-              marginBottom: "20px",
-            }}
-          >
-            <h3>pH</h3>
-            <p>{ph}</p>
-          </div>
+          <Card titulo="pH" valor={ph} />
+          <Card titulo="Fósforo" valor={fosforo} />
+          <Card titulo="Potássio" valor={potassio} />
+          <Card titulo="Cálcio" valor={calcio} />
+          <Card titulo="Magnésio" valor={magnesio} />
+          <Card titulo="CTC" valor={ctc} />
+          <Card titulo="V%" valor={vBase} />
 
           <div
             style={{
               background: "#06152b",
               padding: "20px",
               borderRadius: "15px",
-              marginBottom: "20px",
+              marginTop: "20px",
             }}
           >
-            <h3>Fósforo</h3>
-            <p>{fosforo}</p>
-          </div>
-
-          <div
-            style={{
-              background: "#06152b",
-              padding: "20px",
-              borderRadius: "15px",
-              marginBottom: "20px",
-            }}
-          >
-            <h3>Potássio</h3>
-            <p>{potassio}</p>
-          </div>
-
-          <div
-            style={{
-              background: "#06152b",
-              padding: "20px",
-              borderRadius: "15px",
-              marginBottom: "20px",
-            }}
-          >
-            <h3>V%</h3>
-            <p>{vBase}</p>
-          </div>
-
-          <div
-            style={{
-              background: "#06152b",
-              padding: "20px",
-              borderRadius: "15px",
-            }}
-          >
-            <h3>Recomendação Técnica</h3>
+            <h3
+              style={{
+                fontSize: "28px",
+                marginBottom: "15px",
+                color: "#00ff88",
+              }}
+            >
+              Recomendação Técnica
+            </h3>
 
             <p
               style={{
-                marginTop: "15px",
-                lineHeight: "30px",
+                lineHeight: "32px",
+                fontSize: "18px",
               }}
             >
               {resultado}
@@ -333,6 +360,44 @@ export default function Home() {
     </main>
   );
 }
+
+// =========================
+// CARD
+// =========================
+
+function Card({ titulo, valor }) {
+  return (
+    <div
+      style={{
+        background: "#06152b",
+        padding: "20px",
+        borderRadius: "15px",
+        marginBottom: "15px",
+      }}
+    >
+      <h3
+        style={{
+          marginBottom: "10px",
+          color: "#00ff88",
+        }}
+      >
+        {titulo}
+      </h3>
+
+      <p
+        style={{
+          fontSize: "22px",
+        }}
+      >
+        {valor}
+      </p>
+    </div>
+  );
+}
+
+// =========================
+// INPUT STYLE
+// =========================
 
 const inputStyle = {
   padding: "18px",
