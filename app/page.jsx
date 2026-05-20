@@ -2,322 +2,94 @@
 
 import { useState } from "react";
 
-export default function Home() {
+export default function AuthPage() {
   // =========================
   // STATES
   // =========================
 
-  const [cultura, setCultura] =
-    useState("Pastagem");
+  const [modo, setModo] =
+    useState("login");
 
-  const [ph, setPh] = useState("");
-
-  const [fosforo, setFosforo] =
+  const [nome, setNome] =
     useState("");
 
-  const [potassio, setPotassio] =
+  const [email, setEmail] =
     useState("");
 
-  const [unidadeK, setUnidadeK] =
-    useState("mg");
-
-  const [calcio, setCalcio] =
+  const [senha, setSenha] =
     useState("");
 
-  const [magnesio, setMagnesio] =
-    useState("");
-
-  const [ctc, setCtc] =
-    useState("");
-
-  const [area, setArea] =
-    useState("");
-
-  const [alqueire, setAlqueire] =
-    useState("");
-
-  const [resultado, setResultado] =
-    useState("");
-
-  const [vBase, setVBase] =
+  const [mensagem, setMensagem] =
     useState("");
 
   // =========================
-  // ANALISAR SOLO
+  // LOGIN
   // =========================
 
-  function analisarSolo() {
-    let recomendacoes = [];
+  async function fazerLogin() {
+    try {
+      setMensagem("Entrando...");
 
-    // =========================
-    // CONVERSÃO POTÁSSIO
-    // =========================
+      // FIREBASE LOGIN AQUI
 
-    let kConvertido = 0;
-
-    // mg/dm³
-
-    if (unidadeK === "mg") {
-      kConvertido =
-        Number(potassio) / 391;
-    }
-
-    // cmolc/dm³
-
-    if (unidadeK === "cmol") {
-      kConvertido =
-        Number(potassio);
-    }
-
-    // =========================
-    // V%
-    // =========================
-
-    const V1 =
-      ((Number(calcio) +
-        Number(magnesio) +
-        kConvertido) /
-        Number(ctc)) *
-      100;
-
-    setVBase(V1.toFixed(1));
-
-    // =========================
-    // V2 CULTURA
-    // =========================
-
-    let V2 = 50;
-
-    if (cultura === "Pastagem") {
-      V2 = 50;
-    }
-
-    if (cultura === "Soja") {
-      V2 = 60;
-    }
-
-    if (cultura === "Milho") {
-      V2 = 65;
-    }
-
-    if (cultura === "Café") {
-      V2 = 70;
-    }
-
-    // =========================
-    // NECESSIDADE CALAGEM
-    // =========================
-
-    let NC =
-      ((V2 - V1) *
-        Number(ctc)) /
-      100;
-
-    // NÃO DEIXAR NEGATIVO
-
-    if (NC < 0) {
-      NC = 0;
-    }
-
-    // =========================
-    // SACOS CALCÁRIO
-    // =========================
-
-    const sacosCalcario =
-      NC * 40;
-
-    // =========================
-    // HECTARES
-    // =========================
-
-    const totalCalcario =
-      NC * Number(area);
-
-    const totalSacos =
-      sacosCalcario *
-      Number(area);
-
-    // =========================
-    // ALQUEIRE
-    // =========================
-
-    const hectaresAlqueire =
-      Number(alqueire) * 2.42;
-
-    const totalCalcarioAlqueire =
-      NC * hectaresAlqueire;
-
-    const totalSacosAlqueire =
-      sacosCalcario *
-      hectaresAlqueire;
-
-    // =========================
-    // pH
-    // =========================
-
-    if (Number(ph) < 5.5) {
-      recomendacoes.push(
-        "Solo ácido. Necessária correção com calcário."
-      );
-    } else {
-      recomendacoes.push(
-        "pH adequado."
-      );
-    }
-
-    // =========================
-    // FÓSFORO
-    // =========================
-
-    if (Number(fosforo) < 15) {
-      recomendacoes.push(
-        "Fósforo baixo. Fazer adubação fosfatada."
-      );
-    } else {
-      recomendacoes.push(
-        "Fósforo adequado."
-      );
-    }
-
-    // =========================
-    // POTÁSSIO
-    // =========================
-
-    if (kConvertido < 0.15) {
-      recomendacoes.push(
-        "Potássio baixo. Necessária correção potássica."
-      );
-    } else {
-      recomendacoes.push(
-        "Potássio adequado."
-      );
-    }
-
-    // =========================
-    // RECOMENDAÇÃO KCL
-    // =========================
-
-    const kIdeal = 0.25;
-
-    const necessidadeK =
-      kIdeal - kConvertido;
-
-    if (necessidadeK > 0) {
-      // estimativa simples
-
-      const kgKcl =
-        necessidadeK * 400;
-
-      const sacosKcl =
-        kgKcl / 50;
-
-      const totalKcl =
-        kgKcl * Number(area);
-
-      recomendacoes.push(
-        `
-
-Recomendação potássica:
-
-Aplicar ${kgKcl.toFixed(
-          0
-        )} kg/ha de KCl
-
-(${sacosKcl.toFixed(
-          1
-        )} sacos por hectare).`
-      );
-
-      if (Number(area) > 0) {
-        recomendacoes.push(
-          `
-
-Para ${area} hectares:
-
-${totalKcl.toFixed(
-            0
-          )} kg de KCl no total.`
+      setTimeout(() => {
+        setMensagem(
+          "Login realizado com sucesso 🚜"
         );
-      }
-    }
-
-    // =========================
-    // CALAGEM
-    // =========================
-
-    if (NC > 0) {
-      recomendacoes.push(
-        `
-
-Necessidade de calagem:
-
-${NC.toFixed(
-  2
-)} t/ha de calcário
-
-(${sacosCalcario.toFixed(
-          0
-        )} sacos por hectare).`
-      );
-    } else {
-      recomendacoes.push(
-        "Não há necessidade de calagem."
+      }, 1500);
+    } catch (erro) {
+      setMensagem(
+        "Erro ao fazer login."
       );
     }
+  }
 
-    // =========================
-    // HECTARES
-    // =========================
+  // =========================
+  // CADASTRO
+  // =========================
 
-    if (
-      NC > 0 &&
-      Number(area) > 0
-    ) {
-      recomendacoes.push(
-        `
+  async function fazerCadastro() {
+    try {
+      setMensagem(
+        "Criando conta..."
+      );
 
-Para ${area} hectares:
+      // FIREBASE CADASTRO AQUI
 
-${totalCalcario.toFixed(
-          2
-        )} toneladas de calcário
-
-(${totalSacos.toFixed(
-          0
-        )} sacos no total).`
+      setTimeout(() => {
+        setMensagem(
+          "Conta criada com sucesso 🚜"
+        );
+      }, 1500);
+    } catch (erro) {
+      setMensagem(
+        "Erro ao cadastrar."
       );
     }
+  }
 
-    // =========================
-    // ALQUEIRE
-    // =========================
+  // =========================
+  // RECUPERAR SENHA
+  // =========================
 
-    if (
-      NC > 0 &&
-      Number(alqueire) > 0
-    ) {
-      recomendacoes.push(
-        `
+  async function recuperarSenha() {
+    try {
+      setMensagem(
+        "Enviando email..."
+      );
 
-Para ${alqueire} alqueires paulistas:
+      // FIREBASE RESET AQUI
 
-${totalCalcarioAlqueire.toFixed(
-          2
-        )} toneladas de calcário
-
-(${totalSacosAlqueire.toFixed(
-          0
-        )} sacos no total).`
+      setTimeout(() => {
+        setMensagem(
+          "Email de recuperação enviado 🚜"
+        );
+      }, 1500);
+    } catch (erro) {
+      setMensagem(
+        "Erro ao recuperar senha."
       );
     }
-
-    // =========================
-    // RESULTADO FINAL
-    // =========================
-
-    setResultado(
-      recomendacoes.join(" ")
-    );
   }
 
   // =========================
@@ -331,29 +103,38 @@ ${totalCalcarioAlqueire.toFixed(
         backgroundImage:
           "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1600&auto=format&fit=crop')",
         backgroundSize: "cover",
-        backgroundPosition: "center",
-        padding: "30px",
-        color: "white",
+        backgroundPosition:
+          "center",
+        display: "flex",
+        justifyContent:
+          "center",
+        alignItems: "center",
+        padding: "20px",
         fontFamily: "Arial",
       }}
     >
-      {/* TOPO */}
-
       <div
         style={{
+          width: "100%",
+          maxWidth: "500px",
           background:
             "rgba(0,0,0,0.55)",
           backdropFilter:
-            "blur(10px)",
-          borderRadius: "25px",
+            "blur(12px)",
+          borderRadius: "30px",
           padding: "40px",
-          marginBottom: "30px",
+          border:
+            "1px solid rgba(255,255,255,0.1)",
         }}
       >
+        {/* LOGO */}
+
         <h1
           style={{
-            fontSize: "70px",
+            fontSize: "55px",
             color: "#00ff88",
+            textAlign: "center",
+            marginBottom: "10px",
           }}
         >
           AgroSolo Tech
@@ -361,338 +142,210 @@ ${totalCalcarioAlqueire.toFixed(
 
         <p
           style={{
-            fontSize: "28px",
+            textAlign: "center",
+            color: "white",
+            marginBottom: "35px",
+            fontSize: "20px",
           }}
         >
-          Inteligência em
-          Interpretação de Solo
+          Plataforma Inteligente
+          Agronômica
         </p>
 
-        <p
-          style={{
-            opacity: 0.8,
-          }}
-        >
-          Baseado no Boletim 100
-        </p>
-      </div>
-
-      {/* GRID */}
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "1fr 1fr",
-          gap: "30px",
-        }}
-      >
-        {/* FORMULÁRIO */}
+        {/* BOTÕES */}
 
         <div
           style={{
-            background:
-              "rgba(0,0,0,0.55)",
-            backdropFilter:
-              "blur(10px)",
-            borderRadius: "25px",
-            padding: "30px",
+            display: "flex",
+            gap: "10px",
+            marginBottom: "30px",
           }}
         >
-          <h2
+          <button
+            onClick={() =>
+              setModo("login")
+            }
             style={{
-              color: "#00ff88",
-              fontSize: "40px",
-              marginBottom: "25px",
+              flex: 1,
+              padding: "14px",
+              borderRadius: "12px",
+              border: "none",
+              background:
+                modo === "login"
+                  ? "#00ff88"
+                  : "rgba(255,255,255,0.1)",
+              color:
+                modo === "login"
+                  ? "black"
+                  : "white",
+              fontWeight: "bold",
+              cursor: "pointer",
             }}
           >
-            🌱 Dados da Análise
-          </h2>
+            Login
+          </button>
 
-          <div
+          <button
+            onClick={() =>
+              setModo("cadastro")
+            }
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "15px",
+              flex: 1,
+              padding: "14px",
+              borderRadius: "12px",
+              border: "none",
+              background:
+                modo ===
+                "cadastro"
+                  ? "#00ff88"
+                  : "rgba(255,255,255,0.1)",
+              color:
+                modo ===
+                "cadastro"
+                  ? "black"
+                  : "white",
+              fontWeight: "bold",
+              cursor: "pointer",
             }}
           >
-            {/* CULTURA */}
-
-            <select
-              value={cultura}
-              onChange={(e) =>
-                setCultura(
-                  e.target.value
-                )
-              }
-              style={inputStyle}
-            >
-              <option>
-                Pastagem
-              </option>
-
-              <option>
-                Soja
-              </option>
-
-              <option>
-                Milho
-              </option>
-
-              <option>
-                Café
-              </option>
-            </select>
-
-            <input
-              type="number"
-              placeholder="pH"
-              value={ph}
-              onChange={(e) =>
-                setPh(e.target.value)
-              }
-              style={inputStyle}
-            />
-
-            <input
-              type="number"
-              placeholder="Fósforo"
-              value={fosforo}
-              onChange={(e) =>
-                setFosforo(
-                  e.target.value
-                )
-              }
-              style={inputStyle}
-            />
-
-            {/* POTÁSSIO */}
-
-            <input
-              type="number"
-              placeholder="Potássio"
-              value={potassio}
-              onChange={(e) =>
-                setPotassio(
-                  e.target.value
-                )
-              }
-              style={inputStyle}
-            />
-
-            <select
-              value={unidadeK}
-              onChange={(e) =>
-                setUnidadeK(
-                  e.target.value
-                )
-              }
-              style={inputStyle}
-            >
-              <option value="mg">
-                Potássio em mg/dm³
-              </option>
-
-              <option value="cmol">
-                Potássio em cmolc/dm³
-              </option>
-            </select>
-
-            <input
-              type="number"
-              placeholder="Cálcio"
-              value={calcio}
-              onChange={(e) =>
-                setCalcio(
-                  e.target.value
-                )
-              }
-              style={inputStyle}
-            />
-
-            <input
-              type="number"
-              placeholder="Magnésio"
-              value={magnesio}
-              onChange={(e) =>
-                setMagnesio(
-                  e.target.value
-                )
-              }
-              style={inputStyle}
-            />
-
-            <input
-              type="number"
-              placeholder="CTC"
-              value={ctc}
-              onChange={(e) =>
-                setCtc(e.target.value)
-              }
-              style={inputStyle}
-            />
-
-            <input
-              type="number"
-              placeholder="Área (hectares)"
-              value={area}
-              onChange={(e) =>
-                setArea(e.target.value)
-              }
-              style={inputStyle}
-            />
-
-            <input
-              type="number"
-              placeholder="Área (alqueire paulista)"
-              value={alqueire}
-              onChange={(e) =>
-                setAlqueire(
-                  e.target.value
-                )
-              }
-              style={inputStyle}
-            />
-
-            {/* BOTÃO */}
-
-            <button
-              onClick={analisarSolo}
-              style={{
-                background:
-                  "linear-gradient(90deg,#00c853,#00ff88)",
-                border: "none",
-                padding: "18px",
-                borderRadius: "15px",
-                color: "black",
-                fontSize: "20px",
-                fontWeight: "bold",
-                cursor: "pointer",
-              }}
-            >
-              🚜 Gerar Recomendação
-            </button>
-          </div>
+            Cadastro
+          </button>
         </div>
 
-        {/* RESULTADOS */}
+        {/* FORM */}
 
         <div
           style={{
-            background:
-              "rgba(0,0,0,0.55)",
-            backdropFilter:
-              "blur(10px)",
-            borderRadius: "25px",
-            padding: "30px",
+            display: "flex",
+            flexDirection:
+              "column",
+            gap: "15px",
           }}
         >
-          <h2
-            style={{
-              color: "#00ff88",
-              fontSize: "40px",
-              marginBottom: "25px",
-            }}
-          >
-            📊 Resultado da Análise
-          </h2>
+          {/* NOME */}
 
-          <Card
-            titulo="Cultura"
-            valor={cultura}
+          {modo ===
+            "cadastro" && (
+            <input
+              type="text"
+              placeholder="Nome completo"
+              value={nome}
+              onChange={(e) =>
+                setNome(
+                  e.target.value
+                )
+              }
+              style={inputStyle}
+            />
+          )}
+
+          {/* EMAIL */}
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) =>
+              setEmail(
+                e.target.value
+              )
+            }
+            style={inputStyle}
           />
 
-          <Card
-            titulo="pH"
-            valor={ph}
+          {/* SENHA */}
+
+          <input
+            type="password"
+            placeholder="Senha"
+            value={senha}
+            onChange={(e) =>
+              setSenha(
+                e.target.value
+              )
+            }
+            style={inputStyle}
           />
 
-          <Card
-            titulo="Fósforo"
-            valor={fosforo}
-          />
+          {/* BOTÃO LOGIN */}
 
-          <Card
-            titulo="Potássio"
-            valor={potassio}
-          />
+          {modo === "login" && (
+            <button
+              onClick={
+                fazerLogin
+              }
+              style={
+                botaoPrincipal
+              }
+            >
+              🚜 Entrar
+            </button>
+          )}
 
-          <Card
-            titulo="V%"
-            valor={vBase}
-          />
+          {/* BOTÃO CADASTRO */}
 
-          {/* RECOMENDAÇÃO */}
+          {modo ===
+            "cadastro" && (
+            <button
+              onClick={
+                fazerCadastro
+              }
+              style={
+                botaoPrincipal
+              }
+            >
+              🌱 Criar Conta
+            </button>
+          )}
 
-          <div
-            style={{
-              background:
-                "rgba(255,255,255,0.06)",
-              padding: "20px",
-              borderRadius: "15px",
-              marginTop: "20px",
-            }}
-          >
-            <h3
+          {/* RECUPERAR */}
+
+          {modo === "login" && (
+            <button
+              onClick={
+                recuperarSenha
+              }
               style={{
-                color: "#00ff88",
-                marginBottom: "10px",
+                background:
+                  "transparent",
+                border: "none",
+                color:
+                  "#00ff88",
+                cursor:
+                  "pointer",
+                marginTop:
+                  "10px",
               }}
             >
-              🌾 Recomendação Técnica
-            </h3>
+              Esqueci minha senha
+            </button>
+          )}
 
-            <p
+          {/* MENSAGEM */}
+
+          {mensagem && (
+            <div
               style={{
-                lineHeight: "30px",
-                whiteSpace: "pre-line",
+                background:
+                  "rgba(255,255,255,0.08)",
+                padding:
+                  "15px",
+                borderRadius:
+                  "12px",
+                color:
+                  "white",
+                textAlign:
+                  "center",
+                marginTop:
+                  "10px",
               }}
             >
-              {resultado}
-            </p>
-          </div>
+              {mensagem}
+            </div>
+          )}
         </div>
       </div>
     </main>
-  );
-}
-
-// =========================
-// CARD
-// =========================
-
-function Card({
-  titulo,
-  valor,
-}) {
-  return (
-    <div
-      style={{
-        background:
-          "rgba(255,255,255,0.06)",
-        padding: "20px",
-        borderRadius: "15px",
-        marginBottom: "15px",
-      }}
-    >
-      <h3
-        style={{
-          color: "#00ff88",
-          marginBottom: "10px",
-        }}
-      >
-        {titulo}
-      </h3>
-
-      <p
-        style={{
-          fontSize: "24px",
-          fontWeight: "bold",
-        }}
-      >
-        {valor}
-      </p>
-    </div>
   );
 }
 
@@ -710,4 +363,20 @@ const inputStyle = {
     "rgba(255,255,255,0.08)",
   color: "white",
   outline: "none",
+};
+
+// =========================
+// BOTÃO
+// =========================
+
+const botaoPrincipal = {
+  background:
+    "linear-gradient(90deg,#00c853,#00ff88)",
+  border: "none",
+  padding: "18px",
+  borderRadius: "15px",
+  color: "black",
+  fontSize: "20px",
+  fontWeight: "bold",
+  cursor: "pointer",
 };
