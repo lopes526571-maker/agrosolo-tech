@@ -79,6 +79,13 @@ export default function Home() {
       100;
 
     // =========================
+    // SACOS DE CALCÁRIO
+    // =========================
+
+    const sacosCalcario =
+      NC * 40;
+
+    // =========================
     // pH
     // =========================
 
@@ -128,7 +135,9 @@ export default function Home() {
       recomendacoes.push(
         `Necessidade de calagem estimada: ${NC.toFixed(
           2
-        )} t/ha de calcário.`
+        )} t/ha de calcário (${sacosCalcario.toFixed(
+          0
+        )} sacos por hectare).`
       );
     } else {
       recomendacoes.push(
