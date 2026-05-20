@@ -11,15 +11,27 @@ export default function Home() {
     useState("Pastagem");
 
   const [ph, setPh] = useState("");
+
   const [fosforo, setFosforo] =
     useState("");
+
   const [potassio, setPotassio] =
     useState("");
+
   const [calcio, setCalcio] =
     useState("");
+
   const [magnesio, setMagnesio] =
     useState("");
-  const [ctc, setCtc] = useState("");
+
+  const [ctc, setCtc] =
+    useState("");
+
+  const [area, setArea] =
+    useState("");
+
+  const [alqueire, setAlqueire] =
+    useState("");
 
   const [resultado, setResultado] =
     useState("");
@@ -35,7 +47,7 @@ export default function Home() {
     let recomendacoes = [];
 
     // =========================
-    // CÁLCULO V%
+    // V%
     // =========================
 
     const V1 =
@@ -48,7 +60,7 @@ export default function Home() {
     setVBase(V1.toFixed(1));
 
     // =========================
-    // DEFINIR V2
+    // V2 CULTURA
     // =========================
 
     let V2 = 50;
@@ -70,7 +82,7 @@ export default function Home() {
     }
 
     // =========================
-    // NECESSIDADE DE CALAGEM
+    // CALAGEM
     // =========================
 
     const NC =
@@ -79,11 +91,36 @@ export default function Home() {
       100;
 
     // =========================
-    // SACOS DE CALCÁRIO
+    // SACOS POR HECTARE
     // =========================
 
     const sacosCalcario =
       NC * 40;
+
+    // =========================
+    // ÁREA EM HECTARES
+    // =========================
+
+    const totalCalcario =
+      NC * Number(area);
+
+    const totalSacos =
+      sacosCalcario *
+      Number(area);
+
+    // =========================
+    // ALQUEIRE PAULISTA
+    // =========================
+
+    const hectaresAlqueire =
+      Number(alqueire) * 2.42;
+
+    const totalCalcarioAlqueire =
+      NC * hectaresAlqueire;
+
+    const totalSacosAlqueire =
+      sacosCalcario *
+      hectaresAlqueire;
 
     // =========================
     // pH
@@ -133,15 +170,51 @@ export default function Home() {
 
     if (NC > 0) {
       recomendacoes.push(
-        `Necessidade de calagem estimada: ${NC.toFixed(
-          2
-        )} t/ha de calcário (${sacosCalcario.toFixed(
+        `Necessidade de calagem:
+${NC.toFixed(
+  2
+)} t/ha de calcário
+(${sacosCalcario.toFixed(
           0
         )} sacos por hectare).`
       );
     } else {
       recomendacoes.push(
         "Não há necessidade de calagem."
+      );
+    }
+
+    // =========================
+    // HECTARES
+    // =========================
+
+    if (Number(area) > 0) {
+      recomendacoes.push(
+        `
+Para ${area} hectares:
+${totalCalcario.toFixed(
+          2
+        )} toneladas de calcário
+(${totalSacos.toFixed(
+          0
+        )} sacos no total).`
+      );
+    }
+
+    // =========================
+    // ALQUEIRE
+    // =========================
+
+    if (Number(alqueire) > 0) {
+      recomendacoes.push(
+        `
+Para ${alqueire} alqueires paulistas:
+${totalCalcarioAlqueire.toFixed(
+          2
+        )} toneladas de calcário
+(${totalSacosAlqueire.toFixed(
+          0
+        )} sacos no total).`
       );
     }
 
@@ -182,15 +255,12 @@ export default function Home() {
           borderRadius: "25px",
           padding: "40px",
           marginBottom: "30px",
-          border:
-            "1px solid rgba(255,255,255,0.1)",
         }}
       >
         <h1
           style={{
             fontSize: "70px",
             color: "#00ff88",
-            marginBottom: "10px",
           }}
         >
           AgroSolo Tech
@@ -199,17 +269,15 @@ export default function Home() {
         <p
           style={{
             fontSize: "28px",
-            color: "white",
           }}
         >
-          Inteligência em Interpretação
-          de Solo
+          Inteligência em
+          Interpretação de Solo
         </p>
 
         <p
           style={{
             opacity: 0.8,
-            marginTop: "10px",
           }}
         >
           Baseado no Boletim 100
@@ -353,6 +421,28 @@ export default function Home() {
               style={inputStyle}
             />
 
+            <input
+              type="number"
+              placeholder="Área (hectares)"
+              value={area}
+              onChange={(e) =>
+                setArea(e.target.value)
+              }
+              style={inputStyle}
+            />
+
+            <input
+              type="number"
+              placeholder="Área (alqueire paulista)"
+              value={alqueire}
+              onChange={(e) =>
+                setAlqueire(
+                  e.target.value
+                )
+              }
+              style={inputStyle}
+            />
+
             {/* BOTÃO */}
 
             <button
@@ -374,7 +464,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* RESULTADOS */}
+        {/* RESULTADO */}
 
         <div
           style={{
@@ -459,6 +549,7 @@ export default function Home() {
             <p
               style={{
                 lineHeight: "30px",
+                whiteSpace: "pre-line",
               }}
             >
               {resultado}
