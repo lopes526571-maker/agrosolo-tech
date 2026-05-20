@@ -31,7 +31,7 @@ export default function LoginPage() {
       "Login realizado 🚜"
     );
 
-    // REDIRECIONA PARA HOME
+    // REDIRECIONA
 
     setTimeout(() => {
       window.location.href = "/";
@@ -47,7 +47,7 @@ export default function LoginPage() {
       "Conta criada 🚜"
     );
 
-    // REDIRECIONA PARA HOME
+    // REDIRECIONA
 
     setTimeout(() => {
       window.location.href = "/";
@@ -270,7 +270,7 @@ export default function LoginPage() {
             </button>
           )}
 
-          {/* RECUPERAR */}
+          {/* RECUPERAR SENHA */}
 
           {modo === "login" && (
             <button
