@@ -30,6 +30,12 @@ export default function LoginPage() {
     setMensagem(
       "Login realizado 🚜"
     );
+
+    // REDIRECIONA
+
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 1000);
   }
 
   // =========================
@@ -40,6 +46,12 @@ export default function LoginPage() {
     setMensagem(
       "Conta criada 🚜"
     );
+
+    // REDIRECIONA
+
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 1000);
   }
 
   // =========================
@@ -48,7 +60,7 @@ export default function LoginPage() {
 
   async function recuperarSenha() {
     setMensagem(
-      "Email enviado 🚜"
+      "Email de recuperação enviado 🚜"
     );
   }
 
