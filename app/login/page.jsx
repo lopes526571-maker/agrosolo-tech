@@ -31,7 +31,7 @@ export default function LoginPage() {
       "Login realizado 🚜"
     );
 
-    // REDIRECIONA
+    // REDIRECIONA PARA HOME
 
     setTimeout(() => {
       window.location.href = "/";
@@ -47,7 +47,7 @@ export default function LoginPage() {
       "Conta criada 🚜"
     );
 
-    // REDIRECIONA
+    // REDIRECIONA PARA HOME
 
     setTimeout(() => {
       window.location.href = "/";
@@ -239,7 +239,7 @@ export default function LoginPage() {
             style={inputStyle}
           />
 
-          {/* LOGIN */}
+          {/* BOTÃO LOGIN */}
 
           {modo === "login" && (
             <button
@@ -254,7 +254,7 @@ export default function LoginPage() {
             </button>
           )}
 
-          {/* CADASTRO */}
+          {/* BOTÃO CADASTRO */}
 
           {modo ===
             "cadastro" && (
@@ -322,7 +322,7 @@ export default function LoginPage() {
 }
 
 // =========================
-// STYLE INPUT
+// INPUT STYLE
 // =========================
 
 const inputStyle = {
@@ -338,7 +338,7 @@ const inputStyle = {
 };
 
 // =========================
-// BOTÃO
+// BOTÃO PRINCIPAL
 // =========================
 
 const botaoPrincipal = {
