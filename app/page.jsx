@@ -60,7 +60,7 @@ export default function Home() {
     setVBase(V1.toFixed(1));
 
     // =========================
-    // V2 CULTURA
+    // V2 DA CULTURA
     // =========================
 
     let V2 = 50;
@@ -82,7 +82,7 @@ export default function Home() {
     }
 
     // =========================
-    // CALAGEM
+    // NECESSIDADE DE CALAGEM
     // =========================
 
     const NC =
@@ -98,7 +98,7 @@ export default function Home() {
       NC * 40;
 
     // =========================
-    // ÁREA EM HECTARES
+    // TOTAL HECTARES
     // =========================
 
     const totalCalcario =
@@ -142,7 +142,7 @@ export default function Home() {
 
     if (Number(fosforo) < 15) {
       recomendacoes.push(
-        "Fósforo baixo. Realizar adubação fosfatada."
+        "Fósforo baixo. Fazer adubação fosfatada."
       );
     } else {
       recomendacoes.push(
@@ -464,7 +464,7 @@ ${totalCalcarioAlqueire.toFixed(
           </div>
         </div>
 
-        {/* RESULTADO */}
+        {/* RESULTADOS */}
 
         <div
           style={{
