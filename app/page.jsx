@@ -18,6 +18,8 @@ export default function Home() {
   const [potassio, setPotassio] =
     useState("");
 
+  // UNIDADE POTÁSSIO
+
   const [unidadeK, setUnidadeK] =
     useState("mg");
 
@@ -55,14 +57,14 @@ export default function Home() {
 
     let kConvertido = 0;
 
-    // mg/dm³ -> cmolc/dm³
+    // mg/dm³
 
     if (unidadeK === "mg") {
       kConvertido =
         Number(potassio) / 391;
     }
 
-    // já em cmolc/dm³
+    // cmolc/dm³
 
     if (unidadeK === "cmol") {
       kConvertido =
@@ -200,9 +202,11 @@ export default function Home() {
     if (NC > 0) {
       recomendacoes.push(
         `Necessidade de calagem:
+
 ${NC.toFixed(
   2
 )} t/ha de calcário
+
 (${sacosCalcario.toFixed(
           0
         )} sacos por hectare).`
@@ -223,10 +227,13 @@ ${NC.toFixed(
     ) {
       recomendacoes.push(
         `
+
 Para ${area} hectares:
+
 ${totalCalcario.toFixed(
           2
         )} toneladas de calcário
+
 (${totalSacos.toFixed(
           0
         )} sacos no total).`
@@ -243,10 +250,13 @@ ${totalCalcario.toFixed(
     ) {
       recomendacoes.push(
         `
+
 Para ${alqueire} alqueires paulistas:
+
 ${totalCalcarioAlqueire.toFixed(
           2
         )} toneladas de calcário
+
 (${totalSacosAlqueire.toFixed(
           0
         )} sacos no total).`
@@ -254,7 +264,7 @@ ${totalCalcarioAlqueire.toFixed(
     }
 
     // =========================
-    // RESULTADO
+    // RESULTADO FINAL
     // =========================
 
     setResultado(
@@ -329,7 +339,7 @@ ${totalCalcarioAlqueire.toFixed(
           gap: "30px",
         }}
       >
-        {/* FORM */}
+        {/* FORMULÁRIO */}
 
         <div
           style={{
@@ -423,6 +433,8 @@ ${totalCalcarioAlqueire.toFixed(
               }
               style={inputStyle}
             />
+
+            {/* UNIDADE */}
 
             <select
               value={unidadeK}
@@ -566,6 +578,8 @@ ${totalCalcarioAlqueire.toFixed(
             valor={vBase}
           />
 
+          {/* RECOMENDAÇÃO */}
+
           <div
             style={{
               background:
@@ -639,7 +653,7 @@ function Card({
 }
 
 // =========================
-// INPUT STYLE
+// STYLE INPUT
 // =========================
 
 const inputStyle = {
