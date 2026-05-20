@@ -18,8 +18,6 @@ export default function Home() {
   const [potassio, setPotassio] =
     useState("");
 
-  // UNIDADE POTÁSSIO
-
   const [unidadeK, setUnidadeK] =
     useState("mg");
 
@@ -122,7 +120,7 @@ export default function Home() {
     }
 
     // =========================
-    // SACOS
+    // SACOS CALCÁRIO
     // =========================
 
     const sacosCalcario =
@@ -196,12 +194,62 @@ export default function Home() {
     }
 
     // =========================
+    // RECOMENDAÇÃO KCL
+    // =========================
+
+    const kIdeal = 0.25;
+
+    const necessidadeK =
+      kIdeal - kConvertido;
+
+    if (necessidadeK > 0) {
+      // estimativa simples
+
+      const kgKcl =
+        necessidadeK * 400;
+
+      const sacosKcl =
+        kgKcl / 50;
+
+      const totalKcl =
+        kgKcl * Number(area);
+
+      recomendacoes.push(
+        `
+
+Recomendação potássica:
+
+Aplicar ${kgKcl.toFixed(
+          0
+        )} kg/ha de KCl
+
+(${sacosKcl.toFixed(
+          1
+        )} sacos por hectare).`
+      );
+
+      if (Number(area) > 0) {
+        recomendacoes.push(
+          `
+
+Para ${area} hectares:
+
+${totalKcl.toFixed(
+            0
+          )} kg de KCl no total.`
+        );
+      }
+    }
+
+    // =========================
     // CALAGEM
     // =========================
 
     if (NC > 0) {
       recomendacoes.push(
-        `Necessidade de calagem:
+        `
+
+Necessidade de calagem:
 
 ${NC.toFixed(
   2
@@ -396,8 +444,6 @@ ${totalCalcarioAlqueire.toFixed(
               </option>
             </select>
 
-            {/* INPUTS */}
-
             <input
               type="number"
               placeholder="pH"
@@ -433,8 +479,6 @@ ${totalCalcarioAlqueire.toFixed(
               }
               style={inputStyle}
             />
-
-            {/* UNIDADE */}
 
             <select
               value={unidadeK}
