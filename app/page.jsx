@@ -1,20 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
 
 export default function Home() {
-  // =========================
-  // STATES
-  // =========================
-
-  const [cultura, setCultura] =
-    useState("Pastagem");
+  const [cultura, setCultura] = useState("Pastagem");
 
   const [ph, setPh] = useState("");
   const [fosforo, setFosforo] = useState("");
@@ -26,16 +15,8 @@ export default function Home() {
   const [resultado, setResultado] = useState("");
   const [vBase, setVBase] = useState("");
 
-  // =========================
-  // ANALISAR SOLO
-  // =========================
-
-  async function analisarSolo() {
+  function analisarSolo() {
     let recomendacoes = [];
-
-    // =========================
-    // CÁLCULO V%
-    // =========================
 
     const v =
       ((Number(calcio) +
@@ -46,9 +27,7 @@ export default function Home() {
 
     setVBase(v.toFixed(1));
 
-    // =========================
     // pH
-    // =========================
 
     if (Number(ph) < 5.5) {
       recomendacoes.push(
@@ -60,27 +39,23 @@ export default function Home() {
       );
     }
 
-    // =========================
-    // FÓSFORO
-    // =========================
+    // Fósforo
 
     if (Number(fosforo) < 15) {
       recomendacoes.push(
-        "Fósforo baixo. Realizar adubação fosfatada."
+        "Fósforo baixo. Fazer adubação fosfatada."
       );
     } else {
       recomendacoes.push(
-        "Fósforo em nível adequado."
+        "Fósforo adequado."
       );
     }
 
-    // =========================
-    // POTÁSSIO
-    // =========================
+    // Potássio
 
     if (Number(potassio) < 40) {
       recomendacoes.push(
-        "Potássio baixo. Necessária correção potássica."
+        "Potássio baixo. Fazer correção."
       );
     } else {
       recomendacoes.push(
@@ -88,16 +63,14 @@ export default function Home() {
       );
     }
 
-    // =========================
-    // CULTURAS
-    // =========================
+    // Cultura
 
     if (
       cultura === "Pastagem" &&
       v < 50
     ) {
       recomendacoes.push(
-        "Pastagem com baixa saturação por bases."
+        "Pastagem precisa elevar V%."
       );
     }
 
@@ -106,7 +79,7 @@ export default function Home() {
       v < 60
     ) {
       recomendacoes.push(
-        "Soja necessita maior correção de solo."
+        "Soja precisa maior fertilidade."
       );
     }
 
@@ -115,7 +88,7 @@ export default function Home() {
       v < 65
     ) {
       recomendacoes.push(
-        "Milho exige maior fertilidade."
+        "Milho exige solo mais corrigido."
       );
     }
 
@@ -128,54 +101,10 @@ export default function Home() {
       );
     }
 
-    // =========================
-    // RESULTADO FINAL
-    // =========================
-
-    const textoFinal =
-      recomendacoes.join(" ");
-
-    setResultado(textoFinal);
-
-    // =========================
-    // PEGAR USUÁRIO
-    // =========================
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    // =========================
-    // SALVAR NO SUPABASE
-    // =========================
-
-    const { error } = await supabase
-      .from("analises_solo")
-      .insert([
-        {
-          usuario_id: user?.id,
-          cultura,
-          ph: Number(ph),
-          fosforo: Number(fosforo),
-          potassio: Number(potassio),
-          calcio: Number(calcio),
-          magnesio: Number(magnesio),
-          ctc: Number(ctc),
-          v_percentual: Number(v.toFixed(1)),
-          recomendacao: textoFinal,
-        },
-      ]);
-
-    if (error) {
-      alert(error.message);
-    } else {
-      alert("Análise salva com sucesso 🚜");
-    }
+    setResultado(
+      recomendacoes.join(" ")
+    );
   }
-
-  // =========================
-  // RETURN
-  // =========================
 
   return (
     <main
@@ -208,7 +137,6 @@ export default function Home() {
             fontSize: "70px",
             color: "#00ff88",
             marginBottom: "10px",
-            fontWeight: "bold",
           }}
         >
           AgroSolo Tech
@@ -216,8 +144,7 @@ export default function Home() {
 
         <p
           style={{
-            fontSize: "30px",
-            marginBottom: "10px",
+            fontSize: "28px",
             color: "white",
           }}
         >
@@ -227,11 +154,10 @@ export default function Home() {
         <p
           style={{
             opacity: 0.8,
-            fontSize: "18px",
-            color: "white",
+            marginTop: "10px",
           }}
         >
-          Baseado no Boletim 100 de São Paulo
+          Baseado no Boletim 100
         </p>
       </div>
 
@@ -240,20 +166,21 @@ export default function Home() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns:
+            "1fr 1fr",
           gap: "30px",
         }}
       >
-        {/* FORMULÁRIO */}
+        {/* FORM */}
 
         <div
           style={{
-            background: "rgba(0,0,0,0.55)",
-            backdropFilter: "blur(10px)",
+            background:
+              "rgba(0,0,0,0.55)",
+            backdropFilter:
+              "blur(10px)",
             borderRadius: "25px",
             padding: "30px",
-            border:
-              "1px solid rgba(255,255,255,0.1)",
           }}
         >
           <h2
@@ -273,19 +200,30 @@ export default function Home() {
               gap: "15px",
             }}
           >
-            {/* CULTURA */}
-
             <select
               value={cultura}
               onChange={(e) =>
-                setCultura(e.target.value)
+                setCultura(
+                  e.target.value
+                )
               }
               style={inputStyle}
             >
-              <option>Pastagem</option>
-              <option>Soja</option>
-              <option>Milho</option>
-              <option>Café</option>
+              <option>
+                Pastagem
+              </option>
+
+              <option>
+                Soja
+              </option>
+
+              <option>
+                Milho
+              </option>
+
+              <option>
+                Café
+              </option>
             </select>
 
             <input
@@ -303,7 +241,9 @@ export default function Home() {
               placeholder="Fósforo"
               value={fosforo}
               onChange={(e) =>
-                setFosforo(e.target.value)
+                setFosforo(
+                  e.target.value
+                )
               }
               style={inputStyle}
             />
@@ -313,7 +253,9 @@ export default function Home() {
               placeholder="Potássio"
               value={potassio}
               onChange={(e) =>
-                setPotassio(e.target.value)
+                setPotassio(
+                  e.target.value
+                )
               }
               style={inputStyle}
             />
@@ -323,7 +265,9 @@ export default function Home() {
               placeholder="Cálcio"
               value={calcio}
               onChange={(e) =>
-                setCalcio(e.target.value)
+                setCalcio(
+                  e.target.value
+                )
               }
               style={inputStyle}
             />
@@ -333,7 +277,9 @@ export default function Home() {
               placeholder="Magnésio"
               value={magnesio}
               onChange={(e) =>
-                setMagnesio(e.target.value)
+                setMagnesio(
+                  e.target.value
+                )
               }
               style={inputStyle}
             />
@@ -360,7 +306,6 @@ export default function Home() {
                 fontSize: "20px",
                 fontWeight: "bold",
                 cursor: "pointer",
-                marginTop: "10px",
               }}
             >
               🚜 Gerar Recomendação
@@ -368,16 +313,16 @@ export default function Home() {
           </div>
         </div>
 
-        {/* RESULTADOS */}
+        {/* RESULTADO */}
 
         <div
           style={{
-            background: "rgba(0,0,0,0.55)",
-            backdropFilter: "blur(10px)",
+            background:
+              "rgba(0,0,0,0.55)",
+            backdropFilter:
+              "blur(10px)",
             borderRadius: "25px",
             padding: "30px",
-            border:
-              "1px solid rgba(255,255,255,0.1)",
           }}
         >
           <h2
@@ -395,7 +340,10 @@ export default function Home() {
             valor={cultura}
           />
 
-          <Card titulo="pH" valor={ph} />
+          <Card
+            titulo="pH"
+            valor={ph}
+          />
 
           <Card
             titulo="Fósforo"
@@ -417,23 +365,29 @@ export default function Home() {
             valor={magnesio}
           />
 
-          <Card titulo="CTC" valor={ctc} />
+          <Card
+            titulo="CTC"
+            valor={ctc}
+          />
 
-          <Card titulo="V%" valor={vBase} />
+          <Card
+            titulo="V%"
+            valor={vBase}
+          />
 
           <div
             style={{
-              background: "rgba(0,0,0,0.45)",
+              background:
+                "rgba(255,255,255,0.06)",
               padding: "20px",
-              borderRadius: "20px",
+              borderRadius: "15px",
               marginTop: "20px",
             }}
           >
             <h3
               style={{
                 color: "#00ff88",
-                marginBottom: "15px",
-                fontSize: "28px",
+                marginBottom: "10px",
               }}
             >
               🌾 Recomendação Técnica
@@ -441,8 +395,7 @@ export default function Home() {
 
             <p
               style={{
-                lineHeight: "32px",
-                fontSize: "18px",
+                lineHeight: "30px",
               }}
             >
               {resultado}
@@ -454,11 +407,12 @@ export default function Home() {
   );
 }
 
-// =========================
 // CARD
-// =========================
 
-function Card({ titulo, valor }) {
+function Card({
+  titulo,
+  valor,
+}) {
   return (
     <div
       style={{
@@ -467,15 +421,12 @@ function Card({ titulo, valor }) {
         padding: "20px",
         borderRadius: "15px",
         marginBottom: "15px",
-        border:
-          "1px solid rgba(255,255,255,0.08)",
       }}
     >
       <h3
         style={{
-          marginBottom: "10px",
           color: "#00ff88",
-          fontSize: "22px",
+          marginBottom: "10px",
         }}
       >
         {titulo}
@@ -493,9 +444,7 @@ function Card({ titulo, valor }) {
   );
 }
 
-// =========================
-// INPUT STYLE
-// =========================
+// STYLE INPUT
 
 const inputStyle = {
   padding: "18px",
