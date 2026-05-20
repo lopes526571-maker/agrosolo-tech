@@ -119,7 +119,7 @@ export default function Home() {
       .from("analises_solo")
       .insert([
         {
-          usuario_id: user.id,
+          usuario_id: user?.id,
           ph: Number(ph),
           fosforo: Number(fosforo),
           potassio: Number(potassio),
@@ -152,10 +152,11 @@ export default function Home() {
       }}
     >
       {/* TOPO */}
+
       <div
         style={{
-          backdropFilter: "blur(8px)",
-          background: "rgba(0,0,0,0.45)",
+          background: "rgba(0,0,0,0.55)",
+          backdropFilter: "blur(10px)",
           borderRadius: "25px",
           padding: "40px",
           marginBottom: "30px",
@@ -177,6 +178,7 @@ export default function Home() {
           style={{
             fontSize: "30px",
             marginBottom: "10px",
+            color: "white",
           }}
         >
           Inteligência em Interpretação de Solo
@@ -186,6 +188,7 @@ export default function Home() {
           style={{
             opacity: 0.8,
             fontSize: "18px",
+            color: "white",
           }}
         >
           Baseado no Boletim 100 de São Paulo
@@ -193,6 +196,7 @@ export default function Home() {
       </div>
 
       {/* GRID */}
+
       <div
         style={{
           display: "grid",
@@ -201,6 +205,7 @@ export default function Home() {
         }}
       >
         {/* FORMULÁRIO */}
+
         <div
           style={{
             background: "rgba(0,0,0,0.55)",
@@ -304,6 +309,7 @@ export default function Home() {
         </div>
 
         {/* RESULTADOS */}
+
         <div
           style={{
             background: "rgba(0,0,0,0.55)",
