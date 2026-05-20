@@ -60,7 +60,7 @@ export default function Home() {
     setVBase(V1.toFixed(1));
 
     // =========================
-    // V2 DA CULTURA
+    // V2 POR CULTURA
     // =========================
 
     let V2 = 50;
@@ -85,10 +85,16 @@ export default function Home() {
     // NECESSIDADE DE CALAGEM
     // =========================
 
-    const NC =
+    let NC =
       ((V2 - V1) *
         Number(ctc)) /
       100;
+
+    // NÃO DEIXAR NEGATIVO
+
+    if (NC < 0) {
+      NC = 0;
+    }
 
     // =========================
     // SACOS POR HECTARE
@@ -188,7 +194,10 @@ ${NC.toFixed(
     // HECTARES
     // =========================
 
-    if (Number(area) > 0) {
+    if (
+      Number(area) > 0 &&
+      NC > 0
+    ) {
       recomendacoes.push(
         `
 Para ${area} hectares:
@@ -205,7 +214,10 @@ ${totalCalcario.toFixed(
     // ALQUEIRE
     // =========================
 
-    if (Number(alqueire) > 0) {
+    if (
+      Number(alqueire) > 0 &&
+      NC > 0
+    ) {
       recomendacoes.push(
         `
 Para ${alqueire} alqueires paulistas:
@@ -323,8 +335,6 @@ ${totalCalcarioAlqueire.toFixed(
               gap: "15px",
             }}
           >
-            {/* CULTURA */}
-
             <select
               value={cultura}
               onChange={(e) =>
@@ -350,8 +360,6 @@ ${totalCalcarioAlqueire.toFixed(
                 Café
               </option>
             </select>
-
-            {/* INPUTS */}
 
             <input
               type="number"
@@ -443,8 +451,6 @@ ${totalCalcarioAlqueire.toFixed(
               style={inputStyle}
             />
 
-            {/* BOTÃO */}
-
             <button
               onClick={analisarSolo}
               style={{
@@ -525,8 +531,6 @@ ${totalCalcarioAlqueire.toFixed(
             titulo="V%"
             valor={vBase}
           />
-
-          {/* RECOMENDAÇÃO */}
 
           <div
             style={{
