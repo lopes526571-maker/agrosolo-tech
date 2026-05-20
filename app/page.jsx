@@ -9,6 +9,13 @@ const supabase = createClient(
 );
 
 export default function Home() {
+  // =========================
+  // STATES
+  // =========================
+
+  const [cultura, setCultura] =
+    useState("Pastagem");
+
   const [ph, setPh] = useState("");
   const [fosforo, setFosforo] = useState("");
   const [potassio, setPotassio] = useState("");
@@ -18,6 +25,10 @@ export default function Home() {
 
   const [resultado, setResultado] = useState("");
   const [vBase, setVBase] = useState("");
+
+  // =========================
+  // ANALISAR SOLO
+  // =========================
 
   async function analisarSolo() {
     let recomendacoes = [];
@@ -45,7 +56,7 @@ export default function Home() {
       );
     } else {
       recomendacoes.push(
-        "pH adequado para desenvolvimento da pastagem."
+        "pH adequado para desenvolvimento."
       );
     }
 
@@ -78,28 +89,51 @@ export default function Home() {
     }
 
     // =========================
-    // V%
+    // CULTURAS
     // =========================
 
-    if (v < 50) {
+    if (
+      cultura === "Pastagem" &&
+      v < 50
+    ) {
       recomendacoes.push(
-        "Baixa saturação por bases. Necessária calagem."
+        "Pastagem com baixa saturação por bases."
       );
     }
 
-    if (v >= 50 && v < 70) {
+    if (
+      cultura === "Soja" &&
+      v < 60
+    ) {
       recomendacoes.push(
-        "Saturação por bases adequada para pastagem."
+        "Soja necessita maior correção de solo."
       );
     }
 
-    if (v >= 70) {
+    if (
+      cultura === "Milho" &&
+      v < 65
+    ) {
       recomendacoes.push(
-        "Solo com excelente fertilidade química."
+        "Milho exige maior fertilidade."
       );
     }
 
-    const textoFinal = recomendacoes.join(" ");
+    if (
+      cultura === "Café" &&
+      v < 70
+    ) {
+      recomendacoes.push(
+        "Café necessita alta saturação por bases."
+      );
+    }
+
+    // =========================
+    // RESULTADO FINAL
+    // =========================
+
+    const textoFinal =
+      recomendacoes.join(" ");
 
     setResultado(textoFinal);
 
@@ -120,6 +154,7 @@ export default function Home() {
       .insert([
         {
           usuario_id: user?.id,
+          cultura,
           ph: Number(ph),
           fosforo: Number(fosforo),
           potassio: Number(potassio),
@@ -137,6 +172,10 @@ export default function Home() {
       alert("Análise salva com sucesso 🚜");
     }
   }
+
+  // =========================
+  // RETURN
+  // =========================
 
   return (
     <main
@@ -160,7 +199,8 @@ export default function Home() {
           borderRadius: "25px",
           padding: "40px",
           marginBottom: "30px",
-          border: "1px solid rgba(255,255,255,0.1)",
+          border:
+            "1px solid rgba(255,255,255,0.1)",
         }}
       >
         <h1
@@ -212,7 +252,8 @@ export default function Home() {
             backdropFilter: "blur(10px)",
             borderRadius: "25px",
             padding: "30px",
-            border: "1px solid rgba(255,255,255,0.1)",
+            border:
+              "1px solid rgba(255,255,255,0.1)",
           }}
         >
           <h2
@@ -232,11 +273,28 @@ export default function Home() {
               gap: "15px",
             }}
           >
+            {/* CULTURA */}
+
+            <select
+              value={cultura}
+              onChange={(e) =>
+                setCultura(e.target.value)
+              }
+              style={inputStyle}
+            >
+              <option>Pastagem</option>
+              <option>Soja</option>
+              <option>Milho</option>
+              <option>Café</option>
+            </select>
+
             <input
               type="number"
               placeholder="pH"
               value={ph}
-              onChange={(e) => setPh(e.target.value)}
+              onChange={(e) =>
+                setPh(e.target.value)
+              }
               style={inputStyle}
             />
 
@@ -284,7 +342,9 @@ export default function Home() {
               type="number"
               placeholder="CTC"
               value={ctc}
-              onChange={(e) => setCtc(e.target.value)}
+              onChange={(e) =>
+                setCtc(e.target.value)
+              }
               style={inputStyle}
             />
 
@@ -316,7 +376,8 @@ export default function Home() {
             backdropFilter: "blur(10px)",
             borderRadius: "25px",
             padding: "30px",
-            border: "1px solid rgba(255,255,255,0.1)",
+            border:
+              "1px solid rgba(255,255,255,0.1)",
           }}
         >
           <h2
@@ -329,12 +390,35 @@ export default function Home() {
             📊 Resultado da Análise
           </h2>
 
+          <Card
+            titulo="Cultura"
+            valor={cultura}
+          />
+
           <Card titulo="pH" valor={ph} />
-          <Card titulo="Fósforo" valor={fosforo} />
-          <Card titulo="Potássio" valor={potassio} />
-          <Card titulo="Cálcio" valor={calcio} />
-          <Card titulo="Magnésio" valor={magnesio} />
+
+          <Card
+            titulo="Fósforo"
+            valor={fosforo}
+          />
+
+          <Card
+            titulo="Potássio"
+            valor={potassio}
+          />
+
+          <Card
+            titulo="Cálcio"
+            valor={calcio}
+          />
+
+          <Card
+            titulo="Magnésio"
+            valor={magnesio}
+          />
+
           <Card titulo="CTC" valor={ctc} />
+
           <Card titulo="V%" valor={vBase} />
 
           <div
@@ -378,11 +462,13 @@ function Card({ titulo, valor }) {
   return (
     <div
       style={{
-        background: "rgba(255,255,255,0.06)",
+        background:
+          "rgba(255,255,255,0.06)",
         padding: "20px",
         borderRadius: "15px",
         marginBottom: "15px",
-        border: "1px solid rgba(255,255,255,0.08)",
+        border:
+          "1px solid rgba(255,255,255,0.08)",
       }}
     >
       <h3
@@ -414,9 +500,11 @@ function Card({ titulo, valor }) {
 const inputStyle = {
   padding: "18px",
   borderRadius: "14px",
-  border: "1px solid rgba(255,255,255,0.1)",
+  border:
+    "1px solid rgba(255,255,255,0.1)",
   fontSize: "18px",
-  background: "rgba(255,255,255,0.08)",
+  background:
+    "rgba(255,255,255,0.08)",
   color: "white",
   outline: "none",
 };
