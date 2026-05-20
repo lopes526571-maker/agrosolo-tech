@@ -43,9 +43,7 @@ export default function Home() {
       recomendacoes.push(
         "Aplicar calcário para correção da acidez."
       );
-    }
-
-    if (Number(ph) >= 5.5) {
+    } else {
       recomendacoes.push(
         "pH adequado para desenvolvimento da pastagem."
       );
@@ -59,9 +57,7 @@ export default function Home() {
       recomendacoes.push(
         "Fósforo baixo. Realizar adubação fosfatada."
       );
-    }
-
-    if (Number(fosforo) >= 15) {
+    } else {
       recomendacoes.push(
         "Fósforo em nível adequado."
       );
@@ -75,9 +71,7 @@ export default function Home() {
       recomendacoes.push(
         "Potássio baixo. Necessária correção potássica."
       );
-    }
-
-    if (Number(potassio) >= 40) {
+    } else {
       recomendacoes.push(
         "Potássio adequado."
       );
@@ -118,7 +112,7 @@ export default function Home() {
     } = await supabase.auth.getUser();
 
     // =========================
-    // SALVAR NO BANCO
+    // SALVAR NO SUPABASE
     // =========================
 
     const { error } = await supabase
@@ -148,8 +142,11 @@ export default function Home() {
     <main
       style={{
         minHeight: "100vh",
-        background: "#06152b",
-        padding: "40px",
+        backgroundImage:
+          "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1600&auto=format&fit=crop')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        padding: "30px",
         color: "white",
         fontFamily: "Arial",
       }}
@@ -157,18 +154,20 @@ export default function Home() {
       {/* TOPO */}
       <div
         style={{
-          background:
-            "linear-gradient(90deg, #00c853, #009624)",
-          padding: "40px",
+          backdropFilter: "blur(8px)",
+          background: "rgba(0,0,0,0.45)",
           borderRadius: "25px",
+          padding: "40px",
           marginBottom: "30px",
-          boxShadow: "0px 0px 20px rgba(0,0,0,0.4)",
+          border: "1px solid rgba(255,255,255,0.1)",
         }}
       >
         <h1
           style={{
             fontSize: "70px",
+            color: "#00ff88",
             marginBottom: "10px",
+            fontWeight: "bold",
           }}
         >
           AgroSolo Tech
@@ -177,6 +176,7 @@ export default function Home() {
         <p
           style={{
             fontSize: "30px",
+            marginBottom: "10px",
           }}
         >
           Inteligência em Interpretação de Solo
@@ -184,8 +184,8 @@ export default function Home() {
 
         <p
           style={{
-            marginTop: "10px",
-            opacity: 0.9,
+            opacity: 0.8,
+            fontSize: "18px",
           }}
         >
           Baseado no Boletim 100 de São Paulo
@@ -203,19 +203,21 @@ export default function Home() {
         {/* FORMULÁRIO */}
         <div
           style={{
-            background: "#1e2d44",
+            background: "rgba(0,0,0,0.55)",
+            backdropFilter: "blur(10px)",
+            borderRadius: "25px",
             padding: "30px",
-            borderRadius: "20px",
+            border: "1px solid rgba(255,255,255,0.1)",
           }}
         >
           <h2
             style={{
-              fontSize: "40px",
-              marginBottom: "20px",
               color: "#00ff88",
+              fontSize: "40px",
+              marginBottom: "25px",
             }}
           >
-            Dados da Análise
+            🌱 Dados da Análise
           </h2>
 
           <div
@@ -255,7 +257,7 @@ export default function Home() {
 
             <input
               type="number"
-              placeholder="Cálcio (Ca)"
+              placeholder="Cálcio"
               value={calcio}
               onChange={(e) =>
                 setCalcio(e.target.value)
@@ -265,7 +267,7 @@ export default function Home() {
 
             <input
               type="number"
-              placeholder="Magnésio (Mg)"
+              placeholder="Magnésio"
               value={magnesio}
               onChange={(e) =>
                 setMagnesio(e.target.value)
@@ -277,24 +279,23 @@ export default function Home() {
               type="number"
               placeholder="CTC"
               value={ctc}
-              onChange={(e) =>
-                setCtc(e.target.value)
-              }
+              onChange={(e) => setCtc(e.target.value)}
               style={inputStyle}
             />
 
             <button
               onClick={analisarSolo}
               style={{
-                background: "#00c853",
+                background:
+                  "linear-gradient(90deg,#00c853,#00ff88)",
                 border: "none",
-                padding: "20px",
-                borderRadius: "12px",
-                color: "white",
+                padding: "18px",
+                borderRadius: "15px",
+                color: "black",
                 fontSize: "20px",
+                fontWeight: "bold",
                 cursor: "pointer",
                 marginTop: "10px",
-                fontWeight: "bold",
               }}
             >
               🚜 Gerar Recomendação
@@ -302,22 +303,24 @@ export default function Home() {
           </div>
         </div>
 
-        {/* RESULTADO */}
+        {/* RESULTADOS */}
         <div
           style={{
-            background: "#1e2d44",
+            background: "rgba(0,0,0,0.55)",
+            backdropFilter: "blur(10px)",
+            borderRadius: "25px",
             padding: "30px",
-            borderRadius: "20px",
+            border: "1px solid rgba(255,255,255,0.1)",
           }}
         >
           <h2
             style={{
-              fontSize: "40px",
-              marginBottom: "20px",
               color: "#00ff88",
+              fontSize: "40px",
+              marginBottom: "25px",
             }}
           >
-            Resultado da Análise
+            📊 Resultado da Análise
           </h2>
 
           <Card titulo="pH" valor={ph} />
@@ -330,20 +333,20 @@ export default function Home() {
 
           <div
             style={{
-              background: "#06152b",
+              background: "rgba(0,0,0,0.45)",
               padding: "20px",
-              borderRadius: "15px",
+              borderRadius: "20px",
               marginTop: "20px",
             }}
           >
             <h3
               style={{
-                fontSize: "28px",
-                marginBottom: "15px",
                 color: "#00ff88",
+                marginBottom: "15px",
+                fontSize: "28px",
               }}
             >
-              Recomendação Técnica
+              🌾 Recomendação Técnica
             </h3>
 
             <p
@@ -369,16 +372,18 @@ function Card({ titulo, valor }) {
   return (
     <div
       style={{
-        background: "#06152b",
+        background: "rgba(255,255,255,0.06)",
         padding: "20px",
         borderRadius: "15px",
         marginBottom: "15px",
+        border: "1px solid rgba(255,255,255,0.08)",
       }}
     >
       <h3
         style={{
           marginBottom: "10px",
           color: "#00ff88",
+          fontSize: "22px",
         }}
       >
         {titulo}
@@ -386,7 +391,8 @@ function Card({ titulo, valor }) {
 
       <p
         style={{
-          fontSize: "22px",
+          fontSize: "24px",
+          fontWeight: "bold",
         }}
       >
         {valor}
@@ -401,9 +407,10 @@ function Card({ titulo, valor }) {
 
 const inputStyle = {
   padding: "18px",
-  borderRadius: "10px",
-  border: "none",
+  borderRadius: "14px",
+  border: "1px solid rgba(255,255,255,0.1)",
   fontSize: "18px",
-  background: "#06152b",
+  background: "rgba(255,255,255,0.08)",
   color: "white",
+  outline: "none",
 };
