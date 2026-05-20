@@ -18,6 +18,9 @@ export default function Home() {
   const [potassio, setPotassio] =
     useState("");
 
+  const [unidadeK, setUnidadeK] =
+    useState("mg");
+
   const [calcio, setCalcio] =
     useState("");
 
@@ -47,20 +50,40 @@ export default function Home() {
     let recomendacoes = [];
 
     // =========================
+    // CONVERSÃO POTÁSSIO
+    // =========================
+
+    let kConvertido = 0;
+
+    // mg/dm³ -> cmolc/dm³
+
+    if (unidadeK === "mg") {
+      kConvertido =
+        Number(potassio) / 391;
+    }
+
+    // já em cmolc/dm³
+
+    if (unidadeK === "cmol") {
+      kConvertido =
+        Number(potassio);
+    }
+
+    // =========================
     // V%
     // =========================
 
     const V1 =
       ((Number(calcio) +
         Number(magnesio) +
-        Number(potassio)) /
+        kConvertido) /
         Number(ctc)) *
       100;
 
     setVBase(V1.toFixed(1));
 
     // =========================
-    // V2 POR CULTURA
+    // V2 CULTURA
     // =========================
 
     let V2 = 50;
@@ -82,7 +105,7 @@ export default function Home() {
     }
 
     // =========================
-    // NECESSIDADE DE CALAGEM
+    // NECESSIDADE CALAGEM
     // =========================
 
     let NC =
@@ -97,14 +120,14 @@ export default function Home() {
     }
 
     // =========================
-    // SACOS POR HECTARE
+    // SACOS
     // =========================
 
     const sacosCalcario =
       NC * 40;
 
     // =========================
-    // TOTAL HECTARES
+    // HECTARES
     // =========================
 
     const totalCalcario =
@@ -115,7 +138,7 @@ export default function Home() {
       Number(area);
 
     // =========================
-    // ALQUEIRE PAULISTA
+    // ALQUEIRE
     // =========================
 
     const hectaresAlqueire =
@@ -160,7 +183,7 @@ export default function Home() {
     // POTÁSSIO
     // =========================
 
-    if (Number(potassio) < 40) {
+    if (kConvertido < 0.15) {
       recomendacoes.push(
         "Potássio baixo. Necessária correção potássica."
       );
@@ -195,8 +218,8 @@ ${NC.toFixed(
     // =========================
 
     if (
-      Number(area) > 0 &&
-      NC > 0
+      NC > 0 &&
+      Number(area) > 0
     ) {
       recomendacoes.push(
         `
@@ -215,8 +238,8 @@ ${totalCalcario.toFixed(
     // =========================
 
     if (
-      Number(alqueire) > 0 &&
-      NC > 0
+      NC > 0 &&
+      Number(alqueire) > 0
     ) {
       recomendacoes.push(
         `
@@ -231,7 +254,7 @@ ${totalCalcarioAlqueire.toFixed(
     }
 
     // =========================
-    // RESULTADO FINAL
+    // RESULTADO
     // =========================
 
     setResultado(
@@ -306,7 +329,7 @@ ${totalCalcarioAlqueire.toFixed(
           gap: "30px",
         }}
       >
-        {/* FORMULÁRIO */}
+        {/* FORM */}
 
         <div
           style={{
@@ -335,6 +358,8 @@ ${totalCalcarioAlqueire.toFixed(
               gap: "15px",
             }}
           >
+            {/* CULTURA */}
+
             <select
               value={cultura}
               onChange={(e) =>
@@ -361,6 +386,8 @@ ${totalCalcarioAlqueire.toFixed(
               </option>
             </select>
 
+            {/* INPUTS */}
+
             <input
               type="number"
               placeholder="pH"
@@ -383,6 +410,8 @@ ${totalCalcarioAlqueire.toFixed(
               style={inputStyle}
             />
 
+            {/* POTÁSSIO */}
+
             <input
               type="number"
               placeholder="Potássio"
@@ -394,6 +423,24 @@ ${totalCalcarioAlqueire.toFixed(
               }
               style={inputStyle}
             />
+
+            <select
+              value={unidadeK}
+              onChange={(e) =>
+                setUnidadeK(
+                  e.target.value
+                )
+              }
+              style={inputStyle}
+            >
+              <option value="mg">
+                Potássio em mg/dm³
+              </option>
+
+              <option value="cmol">
+                Potássio em cmolc/dm³
+              </option>
+            </select>
 
             <input
               type="number"
@@ -450,6 +497,8 @@ ${totalCalcarioAlqueire.toFixed(
               }
               style={inputStyle}
             />
+
+            {/* BOTÃO */}
 
             <button
               onClick={analisarSolo}
@@ -510,21 +559,6 @@ ${totalCalcarioAlqueire.toFixed(
           <Card
             titulo="Potássio"
             valor={potassio}
-          />
-
-          <Card
-            titulo="Cálcio"
-            valor={calcio}
-          />
-
-          <Card
-            titulo="Magnésio"
-            valor={magnesio}
-          />
-
-          <Card
-            titulo="CTC"
-            valor={ctc}
           />
 
           <Card
@@ -605,7 +639,7 @@ function Card({
 }
 
 // =========================
-// STYLE INPUT
+// INPUT STYLE
 // =========================
 
 const inputStyle = {
