@@ -3,47 +3,102 @@
 import { useState } from "react";
 
 export default function Home() {
-  const [cultura, setCultura] = useState("Pastagem");
+  // =========================
+  // STATES
+  // =========================
+
+  const [cultura, setCultura] =
+    useState("Pastagem");
 
   const [ph, setPh] = useState("");
-  const [fosforo, setFosforo] = useState("");
-  const [potassio, setPotassio] = useState("");
-  const [calcio, setCalcio] = useState("");
-  const [magnesio, setMagnesio] = useState("");
+  const [fosforo, setFosforo] =
+    useState("");
+  const [potassio, setPotassio] =
+    useState("");
+  const [calcio, setCalcio] =
+    useState("");
+  const [magnesio, setMagnesio] =
+    useState("");
   const [ctc, setCtc] = useState("");
 
-  const [resultado, setResultado] = useState("");
-  const [vBase, setVBase] = useState("");
+  const [resultado, setResultado] =
+    useState("");
+
+  const [vBase, setVBase] =
+    useState("");
+
+  // =========================
+  // ANALISAR SOLO
+  // =========================
 
   function analisarSolo() {
     let recomendacoes = [];
 
-    const v =
+    // =========================
+    // CÁLCULO V%
+    // =========================
+
+    const V1 =
       ((Number(calcio) +
         Number(magnesio) +
         Number(potassio)) /
         Number(ctc)) *
       100;
 
-    setVBase(v.toFixed(1));
+    setVBase(V1.toFixed(1));
 
+    // =========================
+    // DEFINIR V2
+    // =========================
+
+    let V2 = 50;
+
+    if (cultura === "Pastagem") {
+      V2 = 50;
+    }
+
+    if (cultura === "Soja") {
+      V2 = 60;
+    }
+
+    if (cultura === "Milho") {
+      V2 = 65;
+    }
+
+    if (cultura === "Café") {
+      V2 = 70;
+    }
+
+    // =========================
+    // NECESSIDADE DE CALAGEM
+    // =========================
+
+    const NC =
+      ((V2 - V1) *
+        Number(ctc)) /
+      100;
+
+    // =========================
     // pH
+    // =========================
 
     if (Number(ph) < 5.5) {
       recomendacoes.push(
-        "Aplicar calcário para correção da acidez."
+        "Solo ácido. Necessária correção com calcário."
       );
     } else {
       recomendacoes.push(
-        "pH adequado para desenvolvimento."
+        "pH adequado."
       );
     }
 
-    // Fósforo
+    // =========================
+    // FÓSFORO
+    // =========================
 
     if (Number(fosforo) < 15) {
       recomendacoes.push(
-        "Fósforo baixo. Fazer adubação fosfatada."
+        "Fósforo baixo. Realizar adubação fosfatada."
       );
     } else {
       recomendacoes.push(
@@ -51,11 +106,13 @@ export default function Home() {
       );
     }
 
-    // Potássio
+    // =========================
+    // POTÁSSIO
+    // =========================
 
     if (Number(potassio) < 40) {
       recomendacoes.push(
-        "Potássio baixo. Fazer correção."
+        "Potássio baixo. Necessária correção potássica."
       );
     } else {
       recomendacoes.push(
@@ -63,48 +120,34 @@ export default function Home() {
       );
     }
 
-    // Cultura
+    // =========================
+    // CALAGEM
+    // =========================
 
-    if (
-      cultura === "Pastagem" &&
-      v < 50
-    ) {
+    if (NC > 0) {
       recomendacoes.push(
-        "Pastagem precisa elevar V%."
+        `Necessidade de calagem estimada: ${NC.toFixed(
+          2
+        )} t/ha de calcário.`
+      );
+    } else {
+      recomendacoes.push(
+        "Não há necessidade de calagem."
       );
     }
 
-    if (
-      cultura === "Soja" &&
-      v < 60
-    ) {
-      recomendacoes.push(
-        "Soja precisa maior fertilidade."
-      );
-    }
-
-    if (
-      cultura === "Milho" &&
-      v < 65
-    ) {
-      recomendacoes.push(
-        "Milho exige solo mais corrigido."
-      );
-    }
-
-    if (
-      cultura === "Café" &&
-      v < 70
-    ) {
-      recomendacoes.push(
-        "Café necessita alta saturação por bases."
-      );
-    }
+    // =========================
+    // RESULTADO FINAL
+    // =========================
 
     setResultado(
       recomendacoes.join(" ")
     );
   }
+
+  // =========================
+  // RETURN
+  // =========================
 
   return (
     <main
@@ -123,8 +166,10 @@ export default function Home() {
 
       <div
         style={{
-          background: "rgba(0,0,0,0.55)",
-          backdropFilter: "blur(10px)",
+          background:
+            "rgba(0,0,0,0.55)",
+          backdropFilter:
+            "blur(10px)",
           borderRadius: "25px",
           padding: "40px",
           marginBottom: "30px",
@@ -148,7 +193,8 @@ export default function Home() {
             color: "white",
           }}
         >
-          Inteligência em Interpretação de Solo
+          Inteligência em Interpretação
+          de Solo
         </p>
 
         <p
@@ -171,7 +217,7 @@ export default function Home() {
           gap: "30px",
         }}
       >
-        {/* FORM */}
+        {/* FORMULÁRIO */}
 
         <div
           style={{
@@ -200,6 +246,8 @@ export default function Home() {
               gap: "15px",
             }}
           >
+            {/* CULTURA */}
+
             <select
               value={cultura}
               onChange={(e) =>
@@ -225,6 +273,8 @@ export default function Home() {
                 Café
               </option>
             </select>
+
+            {/* INPUTS */}
 
             <input
               type="number"
@@ -294,6 +344,8 @@ export default function Home() {
               style={inputStyle}
             />
 
+            {/* BOTÃO */}
+
             <button
               onClick={analisarSolo}
               style={{
@@ -313,7 +365,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* RESULTADO */}
+        {/* RESULTADOS */}
 
         <div
           style={{
@@ -375,6 +427,8 @@ export default function Home() {
             valor={vBase}
           />
 
+          {/* RECOMENDAÇÃO */}
+
           <div
             style={{
               background:
@@ -407,7 +461,9 @@ export default function Home() {
   );
 }
 
+// =========================
 // CARD
+// =========================
 
 function Card({
   titulo,
@@ -444,7 +500,9 @@ function Card({
   );
 }
 
+// =========================
 // STYLE INPUT
+// =========================
 
 const inputStyle = {
   padding: "18px",
