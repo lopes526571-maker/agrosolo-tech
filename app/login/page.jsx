@@ -2,16 +2,17 @@
 
 import { useState } from "react";
 
-export default function LoginPage() {
-  // =========================
-  // STATES
-  // =========================
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 
+import { auth } from "../../firebase";
+
+export default function LoginPage() {
   const [modo, setModo] =
     useState("login");
-
-  const [nome, setNome] =
-    useState("");
 
   const [email, setEmail] =
     useState("");
@@ -22,61 +23,81 @@ export default function LoginPage() {
   const [mensagem, setMensagem] =
     useState("");
 
-  // =========================
-  // LOGIN
-  // =========================
+  // LOGIN REAL
 
   async function fazerLogin() {
-    setMensagem(
-      "Login realizado 🚜"
-    );
+    try {
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        senha
+      );
 
-    // REDIRECIONA
+      setMensagem(
+        "Login realizado 🚜"
+      );
 
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 1000);
+      setTimeout(() => {
+        window.location.href =
+          "/";
+      }, 1000);
+    } catch (erro) {
+      setMensagem(
+        "Email ou senha inválidos"
+      );
+    }
   }
 
-  // =========================
-  // CADASTRO
-  // =========================
+  // CADASTRO REAL
 
   async function fazerCadastro() {
-    setMensagem(
-      "Conta criada 🚜"
-    );
+    try {
+      await createUserWithEmailAndPassword(
+        auth,
+        email,
+        senha
+      );
 
-    // REDIRECIONA
+      setMensagem(
+        "Conta criada 🚜"
+      );
 
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 1000);
+      setTimeout(() => {
+        window.location.href =
+          "/";
+      }, 1000);
+    } catch (erro) {
+      setMensagem(
+        "Erro ao criar conta"
+      );
+    }
   }
 
-  // =========================
-  // RECUPERAR SENHA
-  // =========================
+  // RESET SENHA
 
   async function recuperarSenha() {
-    setMensagem(
-      "Email de recuperação enviado 🚜"
-    );
-  }
+    try {
+      await sendPasswordResetEmail(
+        auth,
+        email
+      );
 
-  // =========================
-  // RETURN
-  // =========================
+      setMensagem(
+        "Email enviado 🚜"
+      );
+    } catch (erro) {
+      setMensagem(
+        "Erro ao enviar email"
+      );
+    }
+  }
 
   return (
     <main
       style={{
         minHeight: "100vh",
-        backgroundImage:
-          "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1600&auto=format&fit=crop')",
-        backgroundSize: "cover",
-        backgroundPosition:
-          "center",
+        background:
+          "#0f172a",
         display: "flex",
         justifyContent:
           "center",
@@ -90,23 +111,17 @@ export default function LoginPage() {
           width: "100%",
           maxWidth: "500px",
           background:
-            "rgba(0,0,0,0.55)",
-          backdropFilter:
-            "blur(12px)",
-          borderRadius: "30px",
+            "#111827",
+          borderRadius: "25px",
           padding: "40px",
-          border:
-            "1px solid rgba(255,255,255,0.1)",
+          color: "white",
         }}
       >
-        {/* LOGO */}
-
         <h1
           style={{
-            fontSize: "55px",
+            fontSize: "45px",
             color: "#00ff88",
             textAlign: "center",
-            marginBottom: "10px",
           }}
         >
           AgroSolo Tech
@@ -115,13 +130,10 @@ export default function LoginPage() {
         <p
           style={{
             textAlign: "center",
-            color: "white",
-            marginBottom: "35px",
-            fontSize: "20px",
+            marginBottom: "30px",
           }}
         >
-          Plataforma Inteligente
-          Agronômica
+          Login Agronômico
         </p>
 
         {/* BOTÕES */}
@@ -130,7 +142,7 @@ export default function LoginPage() {
           style={{
             display: "flex",
             gap: "10px",
-            marginBottom: "30px",
+            marginBottom: "20px",
           }}
         >
           <button
@@ -139,13 +151,14 @@ export default function LoginPage() {
             }
             style={{
               flex: 1,
-              padding: "14px",
-              borderRadius: "12px",
+              padding: "15px",
               border: "none",
+              borderRadius:
+                "12px",
               background:
                 modo === "login"
                   ? "#00ff88"
-                  : "rgba(255,255,255,0.1)",
+                  : "#1f2937",
               color:
                 modo === "login"
                   ? "black"
@@ -163,14 +176,15 @@ export default function LoginPage() {
             }
             style={{
               flex: 1,
-              padding: "14px",
-              borderRadius: "12px",
+              padding: "15px",
               border: "none",
+              borderRadius:
+                "12px",
               background:
                 modo ===
                 "cadastro"
                   ? "#00ff88"
-                  : "rgba(255,255,255,0.1)",
+                  : "#1f2937",
               color:
                 modo ===
                 "cadastro"
@@ -184,171 +198,128 @@ export default function LoginPage() {
           </button>
         </div>
 
-        {/* FORM */}
+        {/* EMAIL */}
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection:
-              "column",
-            gap: "15px",
-          }}
-        >
-          {/* NOME */}
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) =>
+            setEmail(
+              e.target.value
+            )
+          }
+          style={inputStyle}
+        />
 
-          {modo ===
-            "cadastro" && (
-            <input
-              type="text"
-              placeholder="Nome completo"
-              value={nome}
-              onChange={(e) =>
-                setNome(
-                  e.target.value
-                )
-              }
-              style={inputStyle}
-            />
-          )}
+        {/* SENHA */}
 
-          {/* EMAIL */}
+        <input
+          type="password"
+          placeholder="Senha"
+          value={senha}
+          onChange={(e) =>
+            setSenha(
+              e.target.value
+            )
+          }
+          style={inputStyle}
+        />
 
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) =>
-              setEmail(
-                e.target.value
-              )
+        {/* LOGIN */}
+
+        {modo === "login" && (
+          <button
+            onClick={fazerLogin}
+            style={
+              botaoPrincipal
             }
-            style={inputStyle}
-          />
+          >
+            🚜 Entrar
+          </button>
+        )}
 
-          {/* SENHA */}
+        {/* CADASTRO */}
 
-          <input
-            type="password"
-            placeholder="Senha"
-            value={senha}
-            onChange={(e) =>
-              setSenha(
-                e.target.value
-              )
+        {modo ===
+          "cadastro" && (
+          <button
+            onClick={
+              fazerCadastro
             }
-            style={inputStyle}
-          />
+            style={
+              botaoPrincipal
+            }
+          >
+            🌱 Criar Conta
+          </button>
+        )}
 
-          {/* BOTÃO LOGIN */}
+        {/* RECUPERAR */}
 
-          {modo === "login" && (
-            <button
-              onClick={
-                fazerLogin
-              }
-              style={
-                botaoPrincipal
-              }
-            >
-              🚜 Entrar
-            </button>
-          )}
+        {modo === "login" && (
+          <button
+            onClick={
+              recuperarSenha
+            }
+            style={{
+              marginTop: "15px",
+              background:
+                "transparent",
+              border: "none",
+              color:
+                "#00ff88",
+              cursor:
+                "pointer",
+            }}
+          >
+            Esqueci minha senha
+          </button>
+        )}
 
-          {/* BOTÃO CADASTRO */}
+        {/* MENSAGEM */}
 
-          {modo ===
-            "cadastro" && (
-            <button
-              onClick={
-                fazerCadastro
-              }
-              style={
-                botaoPrincipal
-              }
-            >
-              🌱 Criar Conta
-            </button>
-          )}
-
-          {/* RECUPERAR SENHA */}
-
-          {modo === "login" && (
-            <button
-              onClick={
-                recuperarSenha
-              }
-              style={{
-                background:
-                  "transparent",
-                border: "none",
-                color:
-                  "#00ff88",
-                cursor:
-                  "pointer",
-                marginTop:
-                  "10px",
-              }}
-            >
-              Esqueci minha senha
-            </button>
-          )}
-
-          {/* MENSAGEM */}
-
-          {mensagem && (
-            <div
-              style={{
-                background:
-                  "rgba(255,255,255,0.08)",
-                padding:
-                  "15px",
-                borderRadius:
-                  "12px",
-                color:
-                  "white",
-                textAlign:
-                  "center",
-                marginTop:
-                  "10px",
-              }}
-            >
-              {mensagem}
-            </div>
-          )}
-        </div>
+        {mensagem && (
+          <div
+            style={{
+              marginTop: "20px",
+              background:
+                "#1f2937",
+              padding: "15px",
+              borderRadius:
+                "12px",
+              textAlign:
+                "center",
+            }}
+          >
+            {mensagem}
+          </div>
+        )}
       </div>
     </main>
   );
 }
 
-// =========================
-// INPUT STYLE
-// =========================
-
 const inputStyle = {
+  width: "100%",
   padding: "18px",
-  borderRadius: "14px",
-  border:
-    "1px solid rgba(255,255,255,0.1)",
-  fontSize: "18px",
-  background:
-    "rgba(255,255,255,0.08)",
+  marginBottom: "15px",
+  borderRadius: "12px",
+  border: "none",
+  fontSize: "16px",
+  background: "#1f2937",
   color: "white",
-  outline: "none",
 };
 
-// =========================
-// BOTÃO PRINCIPAL
-// =========================
-
 const botaoPrincipal = {
+  width: "100%",
+  padding: "18px",
+  borderRadius: "12px",
+  border: "none",
   background:
     "linear-gradient(90deg,#00c853,#00ff88)",
-  border: "none",
-  padding: "18px",
-  borderRadius: "15px",
   color: "black",
-  fontSize: "20px",
+  fontSize: "18px",
   fontWeight: "bold",
   cursor: "pointer",
 };
