@@ -11,6 +11,13 @@ import { auth } from "../firebase";
 
 export default function Home() {
   // =========================
+  // LOADING AUTH
+  // =========================
+
+  const [loading, setLoading] =
+    useState(true);
+
+  // =========================
   // PROTEÇÃO LOGIN
   // =========================
 
@@ -22,6 +29,8 @@ export default function Home() {
           if (!user) {
             window.location.href =
               "/login";
+          } else {
+            setLoading(false);
           }
         }
       );
@@ -271,6 +280,31 @@ ${NC.toFixed(
 
     setResultado(
       recomendacoes.join(" ")
+    );
+  }
+
+  // =========================
+  // LOADING
+  // =========================
+
+  if (loading) {
+    return (
+      <main
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent:
+            "center",
+          alignItems: "center",
+          background:
+            "#0f172a",
+          color: "white",
+          fontSize: "30px",
+          fontFamily: "Arial",
+        }}
+      >
+        Carregando 🚜
+      </main>
     );
   }
 
@@ -536,10 +570,6 @@ ${NC.toFixed(
   );
 }
 
-// =========================
-// INPUT
-// =========================
-
 const inputStyle = {
   width: "100%",
   padding: "18px",
@@ -550,10 +580,6 @@ const inputStyle = {
   color: "white",
   fontSize: "16px",
 };
-
-// =========================
-// BOTÃO
-// =========================
 
 const botaoPrincipal = {
   width: "100%",
