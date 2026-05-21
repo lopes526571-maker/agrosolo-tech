@@ -25,6 +25,15 @@ export default function Home() {
   const [potassio, setPotassio] =
     useState("");
 
+  const [calcio, setCalcio] =
+    useState("");
+
+  const [magnesio, setMagnesio] =
+    useState("");
+
+  const [ctc, setCtc] =
+    useState("");
+
   const [area, setArea] =
     useState("");
 
@@ -34,19 +43,37 @@ export default function Home() {
   async function gerarAnalise() {
     let texto = "";
 
-    if (ph < 5.5) {
+    if (Number(ph) < 5.5) {
       texto +=
         "⚠️ Solo ácido. Recomenda-se calagem.\n";
     }
 
-    if (fosforo < 10) {
+    if (
+      Number(fosforo) < 10
+    ) {
       texto +=
         "⚠️ Fósforo baixo. Fazer adubação fosfatada.\n";
     }
 
-    if (potassio < 30) {
+    if (
+      Number(potassio) < 30
+    ) {
       texto +=
         "⚠️ Potássio baixo. Fazer adubação potássica.\n";
+    }
+
+    if (
+      Number(calcio) < 2
+    ) {
+      texto +=
+        "⚠️ Cálcio baixo.\n";
+    }
+
+    if (
+      Number(magnesio) < 1
+    ) {
+      texto +=
+        "⚠️ Magnésio baixo.\n";
     }
 
     if (
@@ -72,18 +99,14 @@ export default function Home() {
 
             "sem-email",
 
-          cultura:
-            cultura,
-
-          ph: ph,
-
-          fosforo:
-            fosforo,
-
-          potassio:
-            potassio,
-
-          area: area,
+          cultura,
+          ph,
+          fosforo,
+          potassio,
+          calcio,
+          magnesio,
+          ctc,
+          area,
 
           resultado:
             texto,
@@ -226,7 +249,59 @@ export default function Home() {
         />
 
         <input
-          placeholder="Área (ha)"
+          placeholder="Cálcio"
+          value={
+            calcio
+          }
+          onChange={(
+            e
+          ) =>
+            setCalcio(
+              e.target
+                .value
+            )
+          }
+          style={
+            inputStyle
+          }
+        />
+
+        <input
+          placeholder="Magnésio"
+          value={
+            magnesio
+          }
+          onChange={(
+            e
+          ) =>
+            setMagnesio(
+              e.target
+                .value
+            )
+          }
+          style={
+            inputStyle
+          }
+        />
+
+        <input
+          placeholder="CTC"
+          value={ctc}
+          onChange={(
+            e
+          ) =>
+            setCtc(
+              e.target
+                .value
+            )
+          }
+          style={
+            inputStyle
+          }
+        />
+
+        <input
+          placeholder="Área"
           value={area}
           onChange={(
             e
