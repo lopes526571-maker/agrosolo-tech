@@ -11,6 +11,10 @@ import {
 import { auth } from "../../firebase";
 
 export default function LoginPage() {
+  // =========================
+  // STATES
+  // =========================
+
   const [modo, setModo] =
     useState("login");
 
@@ -23,7 +27,9 @@ export default function LoginPage() {
   const [mensagem, setMensagem] =
     useState("");
 
+  // =========================
   // LOGIN REAL
+  // =========================
 
   async function fazerLogin() {
     try {
@@ -43,12 +49,14 @@ export default function LoginPage() {
       }, 1000);
     } catch (erro) {
       setMensagem(
-        "Email ou senha inválidos"
+        erro.message
       );
     }
   }
 
+  // =========================
   // CADASTRO REAL
+  // =========================
 
   async function fazerCadastro() {
     try {
@@ -68,12 +76,14 @@ export default function LoginPage() {
       }, 1000);
     } catch (erro) {
       setMensagem(
-        "Erro ao criar conta"
+        erro.message
       );
     }
   }
 
-  // RESET SENHA
+  // =========================
+  // RECUPERAR SENHA
+  // =========================
 
   async function recuperarSenha() {
     try {
@@ -83,14 +93,20 @@ export default function LoginPage() {
       );
 
       setMensagem(
-        "Email enviado 🚜"
+        "Email de recuperação enviado 🚜"
       );
     } catch (erro) {
+      // MOSTRA ERRO REAL FIREBASE
+
       setMensagem(
-        "Erro ao enviar email"
+        erro.message
       );
     }
   }
+
+  // =========================
+  // RETURN
+  // =========================
 
   return (
     <main
@@ -117,6 +133,8 @@ export default function LoginPage() {
           color: "white",
         }}
       >
+        {/* LOGO */}
+
         <h1
           style={{
             fontSize: "45px",
@@ -290,6 +308,8 @@ export default function LoginPage() {
                 "12px",
               textAlign:
                 "center",
+              wordBreak:
+                "break-word",
             }}
           >
             {mensagem}
@@ -299,6 +319,10 @@ export default function LoginPage() {
     </main>
   );
 }
+
+// =========================
+// INPUT STYLE
+// =========================
 
 const inputStyle = {
   width: "100%",
@@ -310,6 +334,10 @@ const inputStyle = {
   background: "#1f2937",
   color: "white",
 };
+
+// =========================
+// BOTÃO
+// =========================
 
 const botaoPrincipal = {
   width: "100%",
