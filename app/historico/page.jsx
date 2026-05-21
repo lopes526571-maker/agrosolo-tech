@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 
 import {
   collection,
@@ -10,7 +13,10 @@ import {
   orderBy,
 } from "firebase/firestore";
 
-import { auth, db } from "../../firebase";
+import {
+  auth,
+  db,
+} from "../../firebase";
 
 export default function Historico() {
   const [analises, setAnalises] =
@@ -64,22 +70,36 @@ export default function Historico() {
   return (
     <main
       style={{
-        minHeight: "100vh",
+        minHeight:
+          "100vh",
+
         background:
-          "#0f172a",
-        color: "white",
-        padding: "40px",
-        fontFamily: "Arial",
+          "#020617",
+
+        color:
+          "white",
+
+        padding:
+          "40px",
+
+        fontFamily:
+          "Arial",
       }}
     >
       <h1
         style={{
-          color: "#00ff88",
-          fontSize: "50px",
-          marginBottom: "40px",
+          color:
+            "#00ff88",
+
+          fontSize:
+            "50px",
+
+          marginBottom:
+            "40px",
         }}
       >
-        Histórico de Análises
+        📋 Histórico
+        de Análises
       </h1>
 
       {analises.map(
@@ -88,20 +108,30 @@ export default function Historico() {
             key={analise.id}
             style={{
               background:
-                "#1f2937",
-              padding: "25px",
+                "#111827",
+
+              padding:
+                "25px",
+
               borderRadius:
                 "20px",
+
               marginBottom:
                 "20px",
             }}
           >
             <h2>
-              🌱 {analise.cultura}
+              🌱{" "}
+              {
+                analise.cultura
+              }
             </h2>
 
             <p>
-              pH: {analise.ph}
+              pH:
+              {
+                analise.ph
+              }
             </p>
 
             <p>
@@ -119,8 +149,31 @@ export default function Historico() {
             </p>
 
             <p>
+              Cálcio:
+              {
+                analise.calcio
+              }
+            </p>
+
+            <p>
+              Magnésio:
+              {
+                analise.magnesio
+              }
+            </p>
+
+            <p>
+              CTC:
+              {
+                analise.ctc
+              }
+            </p>
+
+            <p>
               Área:
-              {analise.area} ha
+              {
+                analise.area
+              }
             </p>
 
             <hr
