@@ -9,6 +9,13 @@ import {
 
 import { auth } from "../firebase";
 
+import { db } from "../firebase";
+
+import {
+  collection,
+  addDoc,
+} from "firebase/firestore";
+
 export default function Home() {
   // =========================
   // LOADING AUTH
@@ -90,7 +97,7 @@ export default function Home() {
   // ANALISAR SOLO
   // =========================
 
-  function analisarSolo() {
+  async function analisarSolo() {
     let recomendacoes = [];
 
     // =========================
@@ -278,9 +285,64 @@ ${NC.toFixed(
       );
     }
 
+    // =========================
+    // RESULTADO
+    // =========================
+
+    const resultadoFinal =
+      recomendacoes.join(" ");
+
     setResultado(
-      recomendacoes.join(" ")
+      resultadoFinal
     );
+
+    // =========================
+    // SALVAR FIRESTORE
+    // =========================
+
+    try {
+      const usuario =
+        auth.currentUser;
+
+      await addDoc(
+        collection(
+          db,
+          "analises"
+        ),
+        {
+          usuario:
+            usuario?.email,
+
+          cultura,
+
+          ph,
+
+          fosforo,
+
+          potassio,
+
+          calcio,
+
+          magnesio,
+
+          ctc,
+
+          area,
+
+          resultado:
+            resultadoFinal,
+
+          data:
+            new Date(),
+        }
+      );
+
+      console.log(
+        "Análise salva 🚜"
+      );
+    } catch (erro) {
+      console.log(erro);
+    }
   }
 
   // =========================
