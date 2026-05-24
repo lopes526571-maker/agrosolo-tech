@@ -9,18 +9,17 @@ import {
   getDocs,
 } from "firebase/firestore";
 
+import {
+  onAuthStateChanged,
+} from "firebase/auth";
+
 import { auth, db } from "../../firebase";
 
 export default function Historico() {
   const [analises, setAnalises] = useState([]);
+  const [carregando, setCarregando] = useState(true);
 
-  async function carregarAnalises() {
-    const usuario = auth.currentUser;
-
-    if (!usuario) {
-      return;
-    }
-
+  async function carregarAnalises(usuario) {
     const q = query(
       collection(db, "analises"),
       where("usuario", "==", usuario.email)
@@ -38,17 +37,29 @@ export default function Historico() {
     });
 
     setAnalises(lista);
+    setCarregando(false);
   }
 
   useEffect(() => {
-    carregarAnalises();
+    const unsubscribe = onAuthStateChanged(auth, (usuario) => {
+      if (!usuario) {
+        window.location.href = "/login";
+        return;
+      }
+
+      carregarAnalises(usuario);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   return (
     <main style={mainStyle}>
       <h1 style={tituloStyle}>📋 Histórico de Análises</h1>
 
-      {analises.length === 0 && (
+      {carregando && <p>Carregando histórico...</p>}
+
+      {!carregando && analises.length === 0 && (
         <p>Nenhuma análise encontrada.</p>
       )}
 
