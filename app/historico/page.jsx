@@ -43,17 +43,25 @@ export default function Historico() {
     return () => unsubscribe();
   }, []);
 
+  function formatarData(data) {
+    if (!data) {
+      return "Sem data";
+    }
+
+    if (data.seconds) {
+      return new Date(data.seconds * 1000).toLocaleString("pt-BR");
+    }
+
+    return data;
+  }
+
   return (
     <main style={mainStyle}>
       <h1 style={tituloStyle}>📋 Histórico de Análises</h1>
 
       {carregando && <p>Carregando histórico...</p>}
 
-      {erro && (
-        <div style={erroStyle}>
-          ⚠️ Erro: {erro}
-        </div>
-      )}
+      {erro && <div style={erroStyle}>⚠️ Erro: {erro}</div>}
 
       {!carregando && !erro && analises.length === 0 && (
         <p>Nenhuma análise encontrada.</p>
@@ -62,7 +70,8 @@ export default function Historico() {
       {analises.map((analise) => (
         <div key={analise.id} style={cardStyle}>
           <h2>🌱 {analise.cultura}</h2>
-          <p>Data: {analise.data}</p>
+
+          <p>Data: {formatarData(analise.data)}</p>
           <p>pH: {analise.ph}</p>
           <p>Fósforo: {analise.fosforo}</p>
           <p>Potássio: {analise.potassio}</p>
@@ -72,9 +81,7 @@ export default function Historico() {
 
           <hr style={{ margin: "15px 0" }} />
 
-          <p style={{ whiteSpace: "pre-line" }}>
-            {analise.resultado}
-          </p>
+          <p style={{ whiteSpace: "pre-line" }}>{analise.resultado}</p>
         </div>
       ))}
     </main>
